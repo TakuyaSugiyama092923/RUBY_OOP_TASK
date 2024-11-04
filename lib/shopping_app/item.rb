@@ -1,4 +1,6 @@
+require_relative "ownable"
 class Item
+  include Ownable
   attr_reader :number, :name, :price
 
   @@instances = []
