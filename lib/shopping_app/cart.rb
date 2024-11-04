@@ -37,5 +37,17 @@ class Cart
   #   - お金が移されるということ ==> (？)のウォレットからその分を引き出して、(？)のウォレットにその分を入金するということ
   #   - アイテムのオーナー権限がカートのオーナーに移されること ==> オーナーの書き換え(item.owner = ?)
   end
+  @items.each do |item|
+    # カートのオーナーのウォレットからアイテムの価格を引き出し、アイテムのオーナーのウォレットに入金する
+    item_price = item.price
+    owner.wallet.withdraw(item_price)
+    item.owner.wallet.deposit(item_price)
 
+    # アイテムのオーナー権限をカートのオーナーに移す
+    item.owner = owner
+  end
+
+  # カートの中身を空にする
+  @items.clear
+end
 end
