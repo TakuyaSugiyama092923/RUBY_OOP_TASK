@@ -1,21 +1,17 @@
-require_relative "ownable"
-class Wallet
-  include Ownable
-  attr_reader :balance
+def check_out
+  return if owner.wallet.balance < total_amount
 
-  def initialize(owner)
-    self.owner = owner
-    @balance = 0
+  # カート内のすべてのアイテムについて処理を行う
+  @items.each do |item|
+    # カートのオーナーのウォレットからアイテムの価格を引き出し、アイテムのオーナーのウォレットに入金する
+    item_price = item.price
+    owner.wallet.withdraw(item_price)
+    item.owner.wallet.deposit(item_price)
+
+    # アイテムのオーナー権限をカートのオーナーに移す
+    item.owner = owner
   end
 
-  def deposit(amount)
-    @balance += amount.to_i
-  end
-
-  def withdraw(amount)
-    return unless @balance >= amount
-    @balance -= amount.to_i
-    amount
-  end
-
+  # カートの中身を空にする
+  @items.clear
 end
